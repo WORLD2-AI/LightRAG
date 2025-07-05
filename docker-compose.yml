@@ -12,10 +12,25 @@ services:
     volumes:
       - ./data/rag_storage:/app/data/rag_storage
       - ./data/inputs:/app/data/inputs
-      - ./config.ini:/app/config.ini
+      # - ./config.ini:/app/config.ini
       - ./.env:/app/.env
     env_file:
       - .env
-    restart: unless-stopped
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  neo4j:
+    container_name: neo4j
+    image: neo4j:latest
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./data/neo4j:/data
+      - ./logs/neo4j:/logs
+      - ./import:/var/lib/neo4j/import
+    environment:
+      NEO4J_AUTH: "neo4j/AItown0517"
+    restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
